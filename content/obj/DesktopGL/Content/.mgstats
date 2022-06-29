@@ -1,0 +1,3 @@
+Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"d:/Developer/projects/Sirius2D/content/space-bg.png","d:/Developer/projects/Sirius2D/content/bin/DesktopGL/Content/space-bg.xnb","TextureProcessor","Texture2DContent",29154,514013,0.1084557
+"d:/Developer/projects/Sirius2D/content/space-drone.png","d:/Developer/projects/Sirius2D/content/bin/DesktopGL/Content/space-drone.xnb","TextureProcessor","Texture2DContent",1376,9301,0.0032092
