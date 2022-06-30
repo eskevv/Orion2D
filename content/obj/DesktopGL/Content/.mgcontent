@@ -4,8 +4,8 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>d:/Developer/projects/Sirius2D/content/space-bg.png</File>
-    <File>d:/Developer/projects/Sirius2D/content/space-drone.png</File>
+    <File>D:/Developer/projects/Orion2D/content/space-bg.png</File>
+    <File>D:/Developer/projects/Orion2D/content/space-drone.png</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />

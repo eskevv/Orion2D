@@ -1,62 +1,63 @@
 namespace Orion2D;
 public class EntityRegistry
 {
-    // __Fields__
-    
-    private ComponentManager _componentManager;
-    private SystemManager _systemManager;
-    private EntityManager _entityManager;
+   // __Fields__
 
-    public EntityRegistry()
-    {
-        _componentManager = new ComponentManager();
-        _systemManager = new SystemManager();
-        _entityManager = new EntityManager();
-    }
+   private ComponentManager _componentManager;
+   private SystemManager _systemManager;
+   private EntityManager _entityManager;
 
-    // __Methods__
+   public EntityRegistry()
+   {
+      _componentManager = new ComponentManager();
+      _systemManager = new SystemManager();
+      _entityManager = new EntityManager();
+   }
 
-    public ushort CreateEntity() => _entityManager.CreateEntity();
+   // __Methods__
 
-    public void DestroyEntity(ushort entity)
-    {
-        _entityManager.DestroyEntity(entity);
-        _componentManager.DestroyEntityComponents(entity);
-        _systemManager.CleanEntityFromSystems(entity);
-    }
+   public void DestroyEntity(ushort entity)
+   {
+      _entityManager.DestroyEntity(entity);
+      _componentManager.DestroyEntityComponents(entity);
+      _systemManager.CleanEntityFromSystems(entity);
+   }
 
-    public void AddComponent<T>(ushort entity, T component)
-    {
-        _componentManager.AddComponent<T>(entity, component);
+   public void AddComponent<T>(ushort entity, T component) where T : Component
+   {
+      _componentManager.AddComponent<T>(entity, component);
 
-        BitArray signature = _entityManager.GetSignature(entity);
-        ushort component_type = _componentManager.GetComponentType<T>();
-        signature.SetBits(component_type);
+      BitArray signature = _entityManager.GetSignature(entity);
+      ushort component_type = _componentManager.GetComponentType<T>();
+      signature.SetBits(component_type);
 
-        _entityManager.SetSignature(entity, signature);
-        _systemManager.UpdateEntityReferences(entity, signature);
-    }
+      _entityManager.SetSignature(entity, signature);
+      _systemManager.UpdateEntityReferences(entity, signature);
+   }
 
-    public void RemoveComponent<T>(ushort entity)
-    {
-        _componentManager.RemoveComponent<T>(entity);
+   public void RemoveComponent<T>(ushort entity)
+   {
+      _componentManager.RemoveComponent<T>(entity);
 
-        BitArray signature = _entityManager.GetSignature(entity);
-        ushort component_type = _componentManager.GetComponentType<T>();
-        signature.ClearBits(component_type);
+      BitArray signature = _entityManager.GetSignature(entity);
+      ushort component_type = _componentManager.GetComponentType<T>();
+      signature.ClearBits(component_type);
 
-        _entityManager.SetSignature(entity, signature);
-        _systemManager.UpdateEntityReferences(entity, signature);
-    }
+      _entityManager.SetSignature(entity, signature);
+      _systemManager.UpdateEntityReferences(entity, signature);
+   }
 
-    public void RegisterComponent<T>() => _componentManager.RegisterComponent<T>();
+   public ushort CreateEntity() => _entityManager.CreateEntity();
 
-    public T GetComponent<T>(ushort entity) => _componentManager.GetComponent<T>(entity);
+   public void RegisterComponent<T>() => _componentManager.RegisterComponent<T>();
 
-    public ushort GetComponentType<T>() => _componentManager.GetComponentType<T>();
+   public T GetComponent<T>(ushort entity) => _componentManager.GetComponent<T>(entity);
 
-    public T RegisterSystem<T>() where T : ComponentSystem, new() => _systemManager.RegisterSystem<T>();
+   public ushort GetComponentType<T>() => _componentManager.GetComponentType<T>();
 
-    public void SetSystemSignature<T>(BitArray signature) => _systemManager.SetSignature<T>(signature);
+   public T RegisterSystem<T>() where T : ComponentSystem, new() => _systemManager.RegisterSystem<T>();
 
+   public void SetSystemSignature<T>(BitArray signature) => _systemManager.SetSignature<T>(signature);
+
+   public bool IsAwakened(ushort entity) => _entityManager.IsAwakened(entity);
 }

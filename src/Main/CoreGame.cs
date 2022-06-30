@@ -1,103 +1,119 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 namespace Orion2D;
 public class CoreGame : Game
 {
-    // __Fields__
+   // __Fields__
 
-    private GraphicsDeviceManager _graphics;
-    private SpriteBatch _spriteBatch;
+   private GraphicsDeviceManager _graphics;
+   private SpriteBatch _spriteBatch;
 
-    public static EntityRegistry Registry;
-    private MovementSystem _movementSystem;
-    private RenderSystem _renderSystem;
+   private Input _input;
 
-    public static Color ClearColr = new Color(24, 24, 24);
-    public static int ScreenWidth => 1920;
-    public static int ScreenHeight => 1080;
-    public static int TargetFPS => 120;
-    public static bool IsVSync => false;
-    public static bool IsFullScreen => false;
+   public static EntityRegistry Registry { get; private set; }
+   public static Dictionary<string, Texture2D> Textures { get; private set; }
 
-    // GameObjects
-    
-    public static Dictionary<string, Texture2D> _textures_;
-    ushort _space_drone;
+   private MovementSystem _movementSystem;
+   private RenderSystem _renderSystem;
+   private ScriptSystem _scriptSystem;
 
-    public CoreGame()
-    {
-        _graphics = new GraphicsDeviceManager(this);
-        Registry = new EntityRegistry();
-        _textures_ = new Dictionary<string, Texture2D>();
-    }
+   public static Color ClearColr = new Color(24, 24, 24);
+   public static int ScreenWidth => 1600;
+   public static int ScreenHeight => 1000;
+   public static int TargetFPS => 120;
+   public static bool IsVSync => false;
+   public static bool IsFullScreen => false;
 
-    // __Methods__
+   // GameObjects
 
-    protected override void Initialize()
-    {
-        _spriteBatch = new SpriteBatch(GraphicsDevice);
+   ushort _spaceDrone;
+   ushort _background; 
 
-        _graphics.PreferredBackBufferWidth = ScreenWidth;
-        _graphics.PreferredBackBufferHeight = ScreenHeight;
-        _graphics.SynchronizeWithVerticalRetrace = IsVSync;
-        _graphics.IsFullScreen = IsFullScreen;
-        _graphics.ApplyChanges();
+   public CoreGame()
+   {
+      _graphics = new GraphicsDeviceManager(this);
+      _input = new Input();
 
-        Content.RootDirectory = "content";
-        IsMouseVisible = true;
-        TargetElapsedTime = System.TimeSpan.FromSeconds(1d / TargetFPS);
-         
-        // -- -- Objects / ECS -- --
+      Registry = new EntityRegistry();
+      Textures = new Dictionary<string, Texture2D>();
+   }
 
-        Registry.RegisterComponent<Transform>();
-        Registry.RegisterComponent<RigidBody>();
-        Registry.RegisterComponent<SpriteRenderer>();
+   // __Methods__
 
-        _movementSystem = Registry.RegisterSystem<MovementSystem>();
-        _renderSystem = Registry.RegisterSystem<RenderSystem>();
-        
-        var movement_signature = new BitArray(ComponentManager.MaxComponents);
-        movement_signature.SetBits(Registry.GetComponentType<Transform>());
-        movement_signature.SetBits(Registry.GetComponentType<RigidBody>());
-        Registry.SetSystemSignature<MovementSystem>(movement_signature);
+   protected override void Initialize()
+   {
+      _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        var render_signature = new BitArray(ComponentManager.MaxComponents);
-        render_signature.SetBits(Registry.GetComponentType<SpriteRenderer>());
-        Registry.SetSystemSignature<RenderSystem>(render_signature);
+      _graphics.PreferredBackBufferWidth = ScreenWidth;
+      _graphics.PreferredBackBufferHeight = ScreenHeight;
+      _graphics.SynchronizeWithVerticalRetrace = IsVSync;
+      _graphics.IsFullScreen = IsFullScreen;
+      _graphics.ApplyChanges();
 
-        // --- --- --- --- --- --- --- --- --- --- --- ---
+      Content.RootDirectory = "content";
+      IsMouseVisible = true;
+      TargetElapsedTime = System.TimeSpan.FromSeconds(1d / TargetFPS);
 
-        base.Initialize();
-    }
+      // -- -- Objects / ECS -- --
 
-    protected override void LoadContent()
-    {
-        _textures_["space-drone"] = Content.Load<Texture2D>("space-drone");
-        _space_drone = EntityCreator.CreateSpaceDrone(new Vector2(500f, 20f));
-    }
+      Registry.RegisterComponent<Transform>();
+      Registry.RegisterComponent<RigidBody>();
+      Registry.RegisterComponent<SpriteRenderer>();
+      Registry.RegisterComponent<Script>();
 
-    protected override void Update(GameTime gameTime)
-    {
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) {
-            Exit();
-        }
+      _movementSystem = Registry.RegisterSystem<MovementSystem>();
+      _renderSystem = Registry.RegisterSystem<RenderSystem>();
+      _scriptSystem = Registry.RegisterSystem<ScriptSystem>();
 
-        _movementSystem.Update();
+      var movement_signature = new BitArray(ComponentManager.MaxComponents);
+      movement_signature.SetBits(Registry.GetComponentType<Transform>());
+      movement_signature.SetBits(Registry.GetComponentType<RigidBody>());
+      Registry.SetSystemSignature<MovementSystem>(movement_signature);
 
-        base.Update(gameTime);
-    }
+      var render_signature = new BitArray(ComponentManager.MaxComponents);
+      render_signature.SetBits(Registry.GetComponentType<SpriteRenderer>());
+      Registry.SetSystemSignature<RenderSystem>(render_signature);
 
-    protected override void Draw(GameTime gameTime)
-    {
-        GraphicsDevice.Clear(ClearColr);
+      var script_signature = new BitArray(ComponentManager.MaxComponents);
+      script_signature.SetBits(Registry.GetComponentType<Script>());
+      Registry.SetSystemSignature<ScriptSystem>(script_signature);
 
-        _spriteBatch.Begin();
-        _renderSystem.Render(_spriteBatch);
-        _spriteBatch.End();
+      // --- --- --- --- --- --- --- --- --- --- --- ---
 
-        base.Draw(gameTime);
-    }
+      base.Initialize();
+   }
+
+   protected override void LoadContent()
+   {
+      Textures["space-drone"] = Content.Load<Texture2D>("space-drone");
+      Textures["space-bg"] = Content.Load<Texture2D>("space-bg");
+
+      _spaceDrone = EntityCreator.CreateSpaceDrone();
+      _background = EntityCreator.CreateSpaceBackground();
+   }
+
+   protected override void Update(GameTime gameTime)
+   {
+      _input.Update();
+      if (Input.KeyPressed(Key.Escape))
+      {
+         Exit();
+      }
+
+      _scriptSystem.Update();
+      _movementSystem.Update();
+
+      base.Update(gameTime);
+   }
+
+   protected override void Draw(GameTime gameTime)
+   {
+      GraphicsDevice.Clear(ClearColr);
+
+      _renderSystem.Render(_spriteBatch);
+
+      base.Draw(gameTime);
+   }
 }
