@@ -1,72 +1,69 @@
 using Microsoft.Xna.Framework;
 using System;
 
-using static Orion2D.Key;
-using static Orion2D.Input;
-
 namespace Orion2D;
-public static class EntityCreator
-{
-   private static EntityRegistry _registry => CoreGame.Registry;
+public static class EntityCreator {
+	// __Fields__
 
-   public static ushort CreateSpaceDrone()
-   {
-      ushort space_drone = _registry.CreateEntity();
+	private static EntityRegistry _registry => CoreGame.Registry;
 
-      var r = new Random();
-      var position = new Vector2(r.Next(1000), r.Next(1000));
-      _registry.AddComponent<Transform>(space_drone, new Transform(position));
+	public static ushort CreateSpaceDrone()
+	{
+		ushort space_drone = _registry.CreateEntity();
 
-      var spriteRenderer = new SpriteRenderer(CoreGame.Textures["space-drone"]);
-      spriteRenderer.ZIndex = 2;
+		var r = new Random();
+		var position = new Vector2(r.Next(300), r.Next(500));
+		_registry.AddComponent<Transform>(space_drone, new Transform(position));
 
-      _registry.AddComponent<SpriteRenderer>(space_drone, spriteRenderer);
-      _registry.AddComponent<RigidBody>(space_drone, new RigidBody(new Vector2(0f, 0f), new Vector2(0f, 0f)));
-      _registry.AddComponent<Script>(space_drone, new SpaceDroneController());
+		var spriteRenderer = new SpriteRenderer(CoreGame.Textures["space-drone"]);
+		spriteRenderer.ZIndex = 2;
 
-      _registry.GetComponent<Script>(space_drone).Awake();
-      return space_drone;
-   }
+		_registry.AddComponent<SpriteRenderer>(space_drone, spriteRenderer);
+		_registry.AddComponent<RigidBody>(space_drone, new RigidBody(new Vector2(0f, 0f), new Vector2(0f, 0f)));
+		_registry.AddComponent<Script>(space_drone, new SpaceDroneController());
 
-   public static ushort CreateSpaceBackground()
-   {
-      ushort background = _registry.CreateEntity();
+		_registry.GetComponent<Script>(space_drone).Awake();
+		return space_drone;
+	}
 
-      var spriteRenderer = new SpriteRenderer(CoreGame.Textures["space-bg"], fitScreen: true);
-      spriteRenderer.ZIndex = 1;
+	public static ushort CreateSpaceBackground()
+	{
+		ushort background = _registry.CreateEntity();
 
-      _registry.AddComponent<Transform>(background, new Transform(new Vector2(0f, 0f)));
-      _registry.AddComponent<SpriteRenderer>(background, spriteRenderer);
+		var spriteRenderer = new SpriteRenderer(CoreGame.Textures["space-bg"], fitScreen: true);
+		spriteRenderer.ZIndex = 1;
 
-      return background;
-   }
+		_registry.AddComponent<Transform>(background, new Transform(new Vector2(0f, 0f)));
+		_registry.AddComponent<SpriteRenderer>(background, spriteRenderer);
+
+		return background;
+	}
 }
 
-public class SpaceDroneController : Script
-{
-   // __Fields__
+public class SpaceDroneController : Script {
+	// __Fields__
 
-   private RigidBody _rb;
-   
-   private float _directionX;
-   private float _directionY;
-   private float _speed = 2.2f;
+	private RigidBody _rb;
 
-   // __Methods__
+	private float _directionX;
+	private float _directionY;
+	private float _speed = 15f;
 
-   public override void Awake()
-   {
-      _rb = GetComponent<RigidBody>();
-   }
+	// __Methods__
 
-   public override void Update()
-   {
-      _directionX = Input.RawHorizontal;
-      _directionY = Input.RawVertical;
+	public override void Awake()
+	{
+		_rb = GetComponent<RigidBody>();
+	}
 
-      Vector2 direction = new Vector2(_directionX, _directionY);
-      direction = direction == Vector2.Zero ? Vector2.Zero : Vector2.Normalize(direction);
+	public override void Update(float deltaTime)
+	{
+		_directionX = Input.RawHorizontal;
+		_directionY = Input.RawVertical;
 
-      _rb.Velocty = direction * _speed;
-   }
+		Vector2 direction = new Vector2(_directionX, _directionY);
+		direction = direction == Vector2.Zero ? Vector2.Zero : Vector2.Normalize(direction);
+
+		_rb.Velocty = direction * _speed * deltaTime;
+	}
 }

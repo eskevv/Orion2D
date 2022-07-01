@@ -1,3 +1,4 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"D:/Developer/projects/Orion2D/content/space-bg.png","D:/Developer/projects/Orion2D/content/bin/DesktopGL/Content/space-bg.xnb","TextureProcessor","Texture2DContent",23846,430165,0.0995264
-"D:/Developer/projects/Orion2D/content/space-drone.png","D:/Developer/projects/Orion2D/content/bin/DesktopGL/Content/space-drone.xnb","TextureProcessor","Texture2DContent",1376,9301,0.0007752
+"D:/Developer/projects/Orion2D/content/fps-font.spritefont","D:/Developer/projects/Orion2D/content/bin/DesktopGL/Content/fps-font.xnb","FontDescriptionProcessor","SpriteFontContent",2016,21538,0.150141
+"D:/Developer/projects/Orion2D/content/space-bg.png","D:/Developer/projects/Orion2D/content/bin/DesktopGL/Content/space-bg.xnb","TextureProcessor","Texture2DContent",23846,430165,0.1025143
+"D:/Developer/projects/Orion2D/content/space-drone.png","D:/Developer/projects/Orion2D/content/bin/DesktopGL/Content/space-drone.xnb","TextureProcessor","Texture2DContent",1376,9301,0.000748

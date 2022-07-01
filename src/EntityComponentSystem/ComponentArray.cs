@@ -25,7 +25,7 @@ public class ComponentArray<T> : IComponentArray
    {
       Debug.Assert(_dataIndexes.ContainsKey(entity), "Removing non-existent component.");
       if (!_dataIndexes.ContainsKey(entity)) return false;
-      
+
       RemoveData(entity);
 
       return true;
