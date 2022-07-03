@@ -6,30 +6,50 @@ public class EntityRegistry {
 	private SystemManager _systemManager;
 	private EntityManager _entityManager;
 
+	private ushort[] _entitiesToKill;
+	private ushort _size;
+
 	public EntityRegistry()
 	{
 		_componentManager = new ComponentManager();
 		_systemManager = new SystemManager();
 		_entityManager = new EntityManager();
+
+		_entitiesToKill = new ushort[EntityManager.MaxEntities];
 	}
 
 	// __Methods__
 
+	public void PrintTotalLiving()
+	{
+		ushort total = _entityManager.TotalLiving();
+		System.Console.WriteLine(total);
+	}
+
+	public void UpdateRegistry()
+	{
+		for (ushort x = 0; x < _size; x++)
+		{
+			ushort entity = _entitiesToKill[x];
+			_entityManager.DestroyEntity(entity);
+			_componentManager.DestroyEntityComponents(entity);
+			_systemManager.CleanEntityFromSystems(entity);
+      }
+
+		_size = 0;
+	}
+
 	public void DestroyEntity(ushort entity)
 	{
-		_entityManager.DestroyEntity(entity);
-		_componentManager.DestroyEntityComponents(entity);
-		_systemManager.CleanEntityFromSystems(entity);
+		_entitiesToKill[_size++] = entity;
 	}
 
 	public void AddComponent<T>(ushort entity, T component) where T : Component
 	{
 		_componentManager.AddComponent<T>(entity, component);
-
 		BitArray signature = _entityManager.GetSignature(entity);
 		ushort component_type = _componentManager.GetComponentType<T>();
 		signature.SetBits(component_type);
-
 		_entityManager.SetSignature(entity, signature);
 		_systemManager.UpdateEntityReferences(entity, signature);
 	}
@@ -37,11 +57,9 @@ public class EntityRegistry {
 	public void RemoveComponent<T>(ushort entity)
 	{
 		_componentManager.RemoveComponent<T>(entity);
-
 		BitArray signature = _entityManager.GetSignature(entity);
 		ushort component_type = _componentManager.GetComponentType<T>();
 		signature.ClearBits(component_type);
-
 		_entityManager.SetSignature(entity, signature);
 		_systemManager.UpdateEntityReferences(entity, signature);
 	}
@@ -58,5 +76,5 @@ public class EntityRegistry {
 
 	public void SetSystemSignature<T>(BitArray signature) => _systemManager.SetSignature<T>(signature);
 
-	public bool IsAwakened(ushort entity) => _entityManager.IsAwakened(entity);
+   public bool HasComponentType<T>(ushort entity) => _componentManager.HasComponentType<T>(entity);
 }

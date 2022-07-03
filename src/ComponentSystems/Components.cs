@@ -6,6 +6,13 @@ public abstract class Component {
 	public ushort Entity { get; set; }
 }
 
+public class Collider : Component {
+   public float X { get; set; }
+   public float Y { get; set; }
+   public float Width { get; set; }
+   public float Height { get; set; }
+}
+
 public class Gravity : Component {
 	public Vector2 Force { get; set; }
 }
@@ -27,10 +34,10 @@ public class RigidBody : Component {
 	public Vector2 Velocty { get; set; }
 	public Vector2 Acceleration { get; set; }
 
-	public RigidBody(Vector2 velocity, Vector2 acceleration)
+	public RigidBody()
 	{
-		Velocty = velocity;
-		Acceleration = acceleration;
+		Velocty = Vector2.Zero;
+		Acceleration = Vector2.Zero;
 	}
 }
 
@@ -61,6 +68,8 @@ public abstract class Script : Component {
 	public virtual void Awake() { }
 
 	public virtual void Update(float deltaTime) { }
+
+   public virtual void OnCollision(Collider c) { }
 
 	protected T GetComponent<T>()
 	{

@@ -23,7 +23,6 @@ public class ComponentManager {
 	{
 		string type_name = typeof(T).Name;
 		Debug.Assert(_componentTypes.ContainsKey(type_name), $"Component |{type_name}| not registered before use.");
-
 		return (ComponentArray<T>)_components[type_name];
 	}
 
@@ -32,7 +31,6 @@ public class ComponentManager {
 		string type_name = typeof(T).Name;
 		Debug.Assert(!_componentTypes.ContainsKey(type_name), $"Registering component type |{type_name}| more than once.");
 		System.Console.WriteLine($"Components[{type_name}] - Registered Successfully.");
-
 		_componentTypes[type_name] = _nextComponentType++;
 		_components[type_name] = new ComponentArray<T>();
 	}
@@ -41,7 +39,6 @@ public class ComponentManager {
 	{
 		string type_name = typeof(T).Name;
 		Debug.Assert(_componentTypes.ContainsKey(type_name), $"Component |{type_name}| not registered before use.");
-
 		return _componentTypes[type_name];
 	}
 
@@ -62,7 +59,17 @@ public class ComponentManager {
 	{
 		ComponentArray<T> component_array = GetComponentArray<T>();
 		return component_array.GetData(entity);
+	}
 
+	public bool HasComponentType<T>(ushort entity)
+	{
+		string type_name = typeof(T).Name;
+		if (!_componentTypes.ContainsKey(type_name)) return false;
+
+		ComponentArray<T> component_array = GetComponentArray<T>();
+		if (!component_array.HasData(entity)) return false;
+
+		return true;
 	}
 
 	public void DestroyEntityComponents(ushort entity)
@@ -70,7 +77,6 @@ public class ComponentManager {
 		foreach (var item in _components)
 		{
 			var component = item.Value;
-
 			if (component.DestroyIndexedData(entity))
 			{
 				Debug.WriteLine($"Successfully destroyed components of entity [{entity}]");

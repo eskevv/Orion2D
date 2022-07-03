@@ -70,11 +70,11 @@ public class Input {
 	private static float GetRawHorizontal()
 	{
 		float rawInput = 0;
-		if (KeyHeld(Key.Left))
+		if (KeyHeld(Key.A))
 		{
 			rawInput -= 1;
 		}
-		if (KeyHeld(Key.Right))
+		if (KeyHeld(Key.D))
 		{
 			rawInput += 1;
 		}
@@ -85,11 +85,11 @@ public class Input {
 	private static float GetRawVertical()
 	{
 		float rawInput = 0;
-		if (KeyHeld(Key.Down))
+		if (KeyHeld(Key.S))
 		{
 			rawInput += 1;
 		}
-		if (KeyHeld(Key.Up))
+		if (KeyHeld(Key.W))
 		{
 			rawInput -= 1;
 		}

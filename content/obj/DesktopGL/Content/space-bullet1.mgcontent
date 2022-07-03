@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>D:/Developer/projects/Orion2D/content/space-bg.png</SourceFile>
-  <SourceTime>2022-06-29T22:57:28.5326973-04:00</SourceTime>
-  <DestFile>D:/Developer/projects/Orion2D/content/bin/DesktopGL/Content/space-bg.xnb</DestFile>
-  <DestTime>2022-07-02T12:57:18.4575171-04:00</DestTime>
+  <SourceFile>D:/Developer/projects/Orion2D/content/space-bullet1.png</SourceFile>
+  <SourceTime>2022-07-01T13:38:31.9364945-04:00</SourceTime>
+  <DestFile>D:/Developer/projects/Orion2D/content/bin/DesktopGL/Content/space-bullet1.xnb</DestFile>
+  <DestTime>2022-07-02T12:57:18.4731386-04:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2020-08-10T12:17:54-04:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

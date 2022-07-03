@@ -11,16 +11,17 @@ public class CoreGame : Game {
 
 	private Input _input;
 	private System.TimeSpan _lastUpdate;
-	private float _timeScale = 50f; // delta scale relative to per second calculations
+	private float _timeScale = 30f; // delta scale relative to per second calculations
 	private float _fps;
 
 	public static EntityRegistry Registry { get; private set; }
 	public static Dictionary<string, Texture2D> Textures { get; private set; }
 	public static Dictionary<string, SpriteFont> Fonts { get; private set; }
 
-	private MovementSystem _physicsSystem;
+	private MovementSystem _movementSystem;
 	private RenderSystem _renderSystem;
 	private ScriptSystem _scriptSystem;
+	private PhysicsSystem _physicsSystem;
 
 	public static Color ClearColr => new Color(24, 24, 24);
 	public static int ScreenWidth => 1600;
@@ -66,10 +67,12 @@ public class CoreGame : Game {
 		Registry.RegisterComponent<RigidBody>();
 		Registry.RegisterComponent<SpriteRenderer>();
 		Registry.RegisterComponent<Script>();
+		Registry.RegisterComponent<Collider>();
 
-		_physicsSystem = Registry.RegisterSystem<MovementSystem>();
+		_movementSystem = Registry.RegisterSystem<MovementSystem>();
 		_renderSystem = Registry.RegisterSystem<RenderSystem>();
 		_scriptSystem = Registry.RegisterSystem<ScriptSystem>();
+		_physicsSystem = Registry.RegisterSystem<PhysicsSystem>();
 
 		var movement_signature = new BitArray(ComponentManager.MaxComponents);
 		movement_signature.SetBits(Registry.GetComponentType<Transform>());
@@ -84,6 +87,12 @@ public class CoreGame : Game {
 		script_signature.SetBits(Registry.GetComponentType<Script>());
 		Registry.SetSystemSignature<ScriptSystem>(script_signature);
 
+		var physics_signature = new BitArray(ComponentManager.MaxComponents);
+		physics_signature.SetBits(Registry.GetComponentType<Collider>());
+		physics_signature.SetBits(Registry.GetComponentType<Transform>());
+		physics_signature.SetBits(Registry.GetComponentType<RigidBody>());
+		Registry.SetSystemSignature<PhysicsSystem>(physics_signature);
+
 		// --- --- --- --- --- --- --- --- --- --- --- ---
 
 		base.Initialize();
@@ -93,10 +102,43 @@ public class CoreGame : Game {
 	{
 		Textures["space-drone"] = Content.Load<Texture2D>("space-drone");
 		Textures["space-bg"] = Content.Load<Texture2D>("space-bg");
+		Textures["space-bullet1"] = Content.Load<Texture2D>("space-bullet1");
 		Fonts["fps-font"] = Content.Load<SpriteFont>("fps-font");
 
-		_spaceDrone = EntityCreator.CreateSpaceDrone();
-		_background = EntityCreator.CreateSpaceBackground();
+		_spaceDrone = EntityCreator.CreateSpaceDrone(playerScript: true);
+		ushort _spaceDrone2 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		ushort _spaceDrone3 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		ushort _spaceDrone4 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		ushort _spaceDrone5 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		ushort _spaceDrone6 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		ushort _spaceDrone7 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		ushort _spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
+		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
+
+		_background = EntityCreator.CreateSpaceBackground(new Vector2(0f, 0f));
+		ushort _background2 = EntityCreator.CreateSpaceBackground(new Vector2(ScreenWidth, 0f));
 	}
 
 	protected override void Update(GameTime gameTime)
@@ -111,7 +153,10 @@ public class CoreGame : Game {
 		_fps = 1f / (deltaTime / _timeScale);
 		_lastUpdate = gameTime.TotalGameTime;
 
+		Registry.UpdateRegistry();
+
 		_scriptSystem.Update(deltaTime);
+		_movementSystem.Update(deltaTime);
 		_physicsSystem.Update(deltaTime);
 
 		base.Update(gameTime);

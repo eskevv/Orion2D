@@ -31,7 +31,7 @@ public class RenderSystem : ComponentSystem {
 
 			if (renderer.Maximized)
 			{
-				dst = new Rectangle(0, 0, CoreGame.ScreenWidth, CoreGame.ScreenHeight);
+				dst = new Rectangle((int)position.X, (int)position.Y, CoreGame.ScreenWidth, CoreGame.ScreenHeight);
 			}
 
 			spriteBatch.Draw(sprite, dst, src, colr, rota, origin, SpriteEffects.None, 0f);
