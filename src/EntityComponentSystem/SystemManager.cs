@@ -59,7 +59,7 @@ public class SystemManager {
 					System.Console.WriteLine($"\nEntity Signature: {entitySignature} AND System Signature: {system_signature}");
 					System.Console.WriteLine($"Added Entities[{entity}] TO: Systems[{system.GetType().Name}]");
 					System.Console.WriteLine($"Systems[{system.GetType().Name}] EntityCount = {system.Entities.Count}");
-					system.UpdatedSet = true;
+					system.IsSetUpdated = true;
 				}
 			}
 			else if (system.Entities.Remove(entity))

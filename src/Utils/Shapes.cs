@@ -16,8 +16,8 @@ public class Shapes {
 		_effect = new BasicEffect(game.GraphicsDevice);
 
 		_effect.VertexColorEnabled = true;
-		_effect.Projection = Matrix.CreateOrthographicOffCenter(0f, _device.Viewport.Width, _device.Viewport.Height, 0f, -10f, 10f);
-		_effect.World = Matrix.CreateTranslation(0.5f, 0.5f, 0f);
+		_effect.Projection = Matrix.CreateOrthographicOffCenter(0f, _device.Viewport.Width, _device.Viewport.Height, 0f, -1, 1);
+		_effect.World = Matrix.CreateTranslation(0.5f, -0.5f, 0f);
 		_effect.View = Matrix.Identity;
 	}
 
@@ -147,8 +147,8 @@ public class Shapes {
 	{
 		float left = position.X;
 		float top = position.Y;
-		float right = position.X + (w * CoreGame.ScreenWidth) - 1;
-		float bottom = position.Y + (h * CoreGame.ScreenHeight) - 1;
+		float right = position.X + w;
+		float bottom = position.Y + h;
 
 		var vertices = new VertexPositionColor[6] // two filled triangles
       {

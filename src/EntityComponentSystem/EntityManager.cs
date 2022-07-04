@@ -10,6 +10,7 @@ public class EntityManager {
 	private Queue<ushort> _availableEntities;
 	private BitArray[] _signatures;
 	private ushort _livingEntityCount;
+   private string[] _tags;
 
 	public EntityManager()
 	{
@@ -24,9 +25,21 @@ public class EntityManager {
 		{
 			_signatures[x] = new BitArray(ComponentManager.MaxComponents);
 		}
+
+      _tags = new string[MaxEntities];
 	}
 
 	// __Methods__
+
+   public void AssignTag(ushort entity, string tag)
+   {
+      _tags[entity] = tag;
+   }
+
+   public string RetrieveTag(ushort entity)
+   {
+      return _tags[entity];
+   }
 
    public ushort TotalLiving()
    {
@@ -44,6 +57,7 @@ public class EntityManager {
 	{
 		Debug.Assert(entity < MaxEntities, "Entity out of range.");
 		_signatures[entity].Reset();
+      _tags[entity] = "void";
 		_livingEntityCount--;
 		_availableEntities.Enqueue(entity);
 	}

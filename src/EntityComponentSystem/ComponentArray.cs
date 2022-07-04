@@ -30,7 +30,7 @@ public class ComponentArray<T> : IComponentArray {
 	public void InsertData(ushort entity, T component)
 	{
 		Debug.Assert(!_dataIndexes.ContainsKey(entity), "Component added to same entity more than once.");
-      
+
 		_dataIndexes[entity] = _size;
 		_entityIndexes[_size] = entity;
 		_componentArray[_size] = component;
@@ -61,10 +61,10 @@ public class ComponentArray<T> : IComponentArray {
 		return _componentArray[data_index];
 	}
 
-   public bool HasData(ushort entity)
-   {
-      return _dataIndexes.ContainsKey(entity);
-   }
+	public bool HasData(ushort entity)
+	{
+		return _dataIndexes.ContainsKey(entity);
+	}
 
 	public ushort GetEntity(T component) // likely unused / obsolete utility
 	{

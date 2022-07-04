@@ -9,6 +9,8 @@ public class EntityRegistry {
 	private ushort[] _entitiesToKill;
 	private ushort _size;
 
+   public int TotalEntities => _entityManager.TotalLiving();
+
 	public EntityRegistry()
 	{
 		_componentManager = new ComponentManager();
@@ -20,12 +22,6 @@ public class EntityRegistry {
 
 	// __Methods__
 
-	public void PrintTotalLiving()
-	{
-		ushort total = _entityManager.TotalLiving();
-		System.Console.WriteLine(total);
-	}
-
 	public void UpdateRegistry()
 	{
 		for (ushort x = 0; x < _size; x++)
@@ -34,13 +30,18 @@ public class EntityRegistry {
 			_entityManager.DestroyEntity(entity);
 			_componentManager.DestroyEntityComponents(entity);
 			_systemManager.CleanEntityFromSystems(entity);
-      }
+		}
 
 		_size = 0;
 	}
 
 	public void DestroyEntity(ushort entity)
 	{
+      for (int x = 0; x < _size; x++)
+      {
+         if (_entitiesToKill[x] == entity) return;
+      }
+
 		_entitiesToKill[_size++] = entity;
 	}
 
@@ -76,5 +77,9 @@ public class EntityRegistry {
 
 	public void SetSystemSignature<T>(BitArray signature) => _systemManager.SetSignature<T>(signature);
 
-   public bool HasComponentType<T>(ushort entity) => _componentManager.HasComponentType<T>(entity);
+	public bool HasComponentType<T>(ushort entity) => _componentManager.HasComponentType<T>(entity);
+
+   public void AssignTag(ushort entity, string tag) => _entityManager.AssignTag(entity, tag);
+
+   public string RetrieveTag(ushort entity) => _entityManager.RetrieveTag(entity);
 }

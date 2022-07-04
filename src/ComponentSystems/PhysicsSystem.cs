@@ -26,25 +26,25 @@ public class PhysicsSystem : ComponentSystem {
 
 			for (int y = x; y < Entities.Count; y++)
 			{
-            if (x == y) continue;
+				if (x == y) continue;
 				ushort item2 = entities[y];
 				var collider2 = CoreGame.Registry.GetComponent<Collider>(item2);
-            bool collision_happened = TestCollision(collider, collider2);
+				bool collision_happened = TestCollision(collider, collider2);
 
-            if (collision_happened)
-            {
-               if (CoreGame.Registry.HasComponentType<Script>(item))
-               {
-                  var script = CoreGame.Registry.GetComponent<Script>(item);
-                  script.OnCollision(collider2);
-               }
-               if (CoreGame.Registry.HasComponentType<Script>(item2))
-               {
-                  var script = CoreGame.Registry.GetComponent<Script>(item2);
-                  script.OnCollision(collider);
-               }
-               // CollidingObjects?.Invoke(item, item2);
-            }
+				if (collision_happened)
+				{
+					if (CoreGame.Registry.HasComponentType<Script>(item))
+					{
+						var script = CoreGame.Registry.GetComponent<Script>(item);
+						script.OnCollision(collider2);
+					}
+					if (CoreGame.Registry.HasComponentType<Script>(item2))
+					{
+						var script = CoreGame.Registry.GetComponent<Script>(item2);
+						script.OnCollision(collider);
+					}
+					// CollidingObjects?.Invoke(item, item2);
+				}
 			}
 		}
 	}

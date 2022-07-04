@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>D:/Developer/projects/Orion2D/content/space-drone.png</SourceFile>
-  <SourceTime>2022-06-26T16:28:53.1164506-04:00</SourceTime>
-  <DestFile>D:/Developer/projects/Orion2D/content/bin/DesktopGL/Content/space-drone.xnb</DestFile>
-  <DestTime>2022-07-03T19:44:32.8549894-04:00</DestTime>
+  <SourceFile>D:/Developer/projects/Orion2D/content/explosion.png</SourceFile>
+  <SourceTime>2022-07-03T17:56:06.9350584-04:00</SourceTime>
+  <DestFile>D:/Developer/projects/Orion2D/content/bin/DesktopGL/Content/explosion.xnb</DestFile>
+  <DestTime>2022-07-03T19:44:31.7732901-04:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2020-08-10T12:17:54-04:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

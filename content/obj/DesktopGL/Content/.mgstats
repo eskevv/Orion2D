@@ -1,5 +1,7 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"D:/Developer/projects/Orion2D/content/fps-font.spritefont","D:/Developer/projects/Orion2D/content/bin/DesktopGL/Content/fps-font.xnb","FontDescriptionProcessor","SpriteFontContent",2016,21538,0.1616621
-"D:/Developer/projects/Orion2D/content/space-bg.png","D:/Developer/projects/Orion2D/content/bin/DesktopGL/Content/space-bg.xnb","TextureProcessor","Texture2DContent",23846,430165,0.0164285
-"D:/Developer/projects/Orion2D/content/space-bullet1.png","D:/Developer/projects/Orion2D/content/bin/DesktopGL/Content/space-bullet1.xnb","TextureProcessor","Texture2DContent",137,1109,0.0030251
-"D:/Developer/projects/Orion2D/content/space-drone.png","D:/Developer/projects/Orion2D/content/bin/DesktopGL/Content/space-drone.xnb","TextureProcessor","Texture2DContent",1376,9301,0.0033439
+"D:/Developer/projects/Orion2D/content/explosion.png","D:/Developer/projects/Orion2D/content/bin/DesktopGL/Content/explosion.xnb","TextureProcessor","Texture2DContent",102248,1048661,0.1111177
+"D:/Developer/projects/Orion2D/content/explosion-hit.wav","D:/Developer/projects/Orion2D/content/bin/DesktopGL/Content/explosion-hit.xnb","SoundEffectProcessor","SoundEffectContent",780674,780605,1.0057354
+"D:/Developer/projects/Orion2D/content/fps-font.spritefont","D:/Developer/projects/Orion2D/content/bin/DesktopGL/Content/fps-font.xnb","FontDescriptionProcessor","SpriteFontContent",2016,21538,0.0593981
+"D:/Developer/projects/Orion2D/content/space-bg.png","D:/Developer/projects/Orion2D/content/bin/DesktopGL/Content/space-bg.xnb","TextureProcessor","Texture2DContent",23846,430165,0.0067168
+"D:/Developer/projects/Orion2D/content/space-bullet1.png","D:/Developer/projects/Orion2D/content/bin/DesktopGL/Content/space-bullet1.xnb","TextureProcessor","Texture2DContent",137,1109,0.0005953
+"D:/Developer/projects/Orion2D/content/space-drone.png","D:/Developer/projects/Orion2D/content/bin/DesktopGL/Content/space-drone.xnb","TextureProcessor","Texture2DContent",1376,9301,0.0008694

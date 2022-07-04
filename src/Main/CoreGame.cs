@@ -1,177 +1,159 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
 using System.Collections.Generic;
 
 namespace Orion2D;
 public class CoreGame : Game {
-	// __Fields__
+   // __Fields__
 
-	private GraphicsDeviceManager _graphics;
-	private SpriteBatch _spriteBatch;
+   private GraphicsDeviceManager _graphics;
+   private SpriteBatch _spriteBatch;
 
-	private Input _input;
-	private System.TimeSpan _lastUpdate;
-	private float _timeScale = 30f; // delta scale relative to per second calculations
-	private float _fps;
+   private Input _input;
+   private Shapes _shapes;
+   private double _lastUpdate;
+   private double _totalTime;
+   private double _fps;
 
-	public static EntityRegistry Registry { get; private set; }
-	public static Dictionary<string, Texture2D> Textures { get; private set; }
-	public static Dictionary<string, SpriteFont> Fonts { get; private set; }
+   public static EntityRegistry Registry { get; private set; }
+   public static Dictionary<string, Texture2D> Textures { get; private set; }
+   public static Dictionary<string, SpriteFont> Fonts { get; private set; }
+   public static Dictionary<string, SoundEffect> Sounds { get; private set; }
 
-	private MovementSystem _movementSystem;
-	private RenderSystem _renderSystem;
-	private ScriptSystem _scriptSystem;
-	private PhysicsSystem _physicsSystem;
+   private MovementSystem _movementSystem;
+   private RenderSystem _renderSystem;
+   private ScriptSystem _scriptSystem;
+   private PhysicsSystem _physicsSystem;
 
-	public static Color ClearColr => new Color(24, 24, 24);
-	public static int ScreenWidth => 1600;
-	public static int ScreenHeight => 900;
-	public static int TargetFPS => 120;
-	public static bool IsVSync => false;
-	public static bool IsFullScreen => false;
+   public static Color ClearColr => new Color(24, 24, 24);
+   public static int ScreenWidth => 1600;
+   public static int ScreenHeight => 900;
+   public static int TargetFPS => 120;
+   public static bool IsVSync => false;
+   public static bool IsFullScreen => false;
 
-	// GameObjects
+   public CoreGame()
+   {
+      _graphics = new GraphicsDeviceManager(this);
+      _input = new Input();
+      _shapes = new Shapes();
 
-	ushort _spaceDrone;
-	ushort _background;
+      Registry = new EntityRegistry();
+      Textures = new Dictionary<string, Texture2D>();
+      Fonts = new Dictionary<string, SpriteFont>();
+      Sounds = new Dictionary<string, SoundEffect>();
+   }
 
-	public CoreGame()
-	{
-		_graphics = new GraphicsDeviceManager(this);
-		_input = new Input();
+   // __Methods__
 
-		Registry = new EntityRegistry();
-		Textures = new Dictionary<string, Texture2D>();
-		Fonts = new Dictionary<string, SpriteFont>();
-	}
+   protected override void Initialize()
+   {
+      _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-	// __Methods__
+      _graphics.PreferredBackBufferWidth = ScreenWidth;
+      _graphics.PreferredBackBufferHeight = ScreenHeight;
+      _graphics.SynchronizeWithVerticalRetrace = IsVSync;
+      _graphics.IsFullScreen = IsFullScreen;
+      _graphics.ApplyChanges();
 
-	protected override void Initialize()
-	{
-		_spriteBatch = new SpriteBatch(GraphicsDevice);
+      _shapes.Initialize(this);
 
-		_graphics.PreferredBackBufferWidth = ScreenWidth;
-		_graphics.PreferredBackBufferHeight = ScreenHeight;
-		_graphics.SynchronizeWithVerticalRetrace = IsVSync;
-		_graphics.IsFullScreen = IsFullScreen;
-		_graphics.ApplyChanges();
+      Content.RootDirectory = "content";
+      IsMouseVisible = true;
+      TargetElapsedTime = System.TimeSpan.FromSeconds(1d / TargetFPS);
 
-		Content.RootDirectory = "content";
-		IsMouseVisible = true;
-		TargetElapsedTime = System.TimeSpan.FromSeconds(1d / TargetFPS);
+      // -- -- Objects / ECS -- --
 
-		// -- -- Objects / ECS -- --
+      Registry.RegisterComponent<Transform>();
+      Registry.RegisterComponent<RigidBody>();
+      Registry.RegisterComponent<SpriteRenderer>();
+      Registry.RegisterComponent<Script>();
+      Registry.RegisterComponent<Collider>();
 
-		Registry.RegisterComponent<Transform>();
-		Registry.RegisterComponent<RigidBody>();
-		Registry.RegisterComponent<SpriteRenderer>();
-		Registry.RegisterComponent<Script>();
-		Registry.RegisterComponent<Collider>();
+      _movementSystem = Registry.RegisterSystem<MovementSystem>();
+      _renderSystem = Registry.RegisterSystem<RenderSystem>();
+      _scriptSystem = Registry.RegisterSystem<ScriptSystem>();
+      _physicsSystem = Registry.RegisterSystem<PhysicsSystem>();
 
-		_movementSystem = Registry.RegisterSystem<MovementSystem>();
-		_renderSystem = Registry.RegisterSystem<RenderSystem>();
-		_scriptSystem = Registry.RegisterSystem<ScriptSystem>();
-		_physicsSystem = Registry.RegisterSystem<PhysicsSystem>();
+      var movement_signature = new BitArray(ComponentManager.MaxComponents);
+      movement_signature.SetBits(Registry.GetComponentType<Transform>());
+      movement_signature.SetBits(Registry.GetComponentType<RigidBody>());
+      Registry.SetSystemSignature<MovementSystem>(movement_signature);
 
-		var movement_signature = new BitArray(ComponentManager.MaxComponents);
-		movement_signature.SetBits(Registry.GetComponentType<Transform>());
-		movement_signature.SetBits(Registry.GetComponentType<RigidBody>());
-		Registry.SetSystemSignature<MovementSystem>(movement_signature);
+      var render_signature = new BitArray(ComponentManager.MaxComponents);
+      render_signature.SetBits(Registry.GetComponentType<SpriteRenderer>());
+      Registry.SetSystemSignature<RenderSystem>(render_signature);
 
-		var render_signature = new BitArray(ComponentManager.MaxComponents);
-		render_signature.SetBits(Registry.GetComponentType<SpriteRenderer>());
-		Registry.SetSystemSignature<RenderSystem>(render_signature);
+      var script_signature = new BitArray(ComponentManager.MaxComponents);
+      script_signature.SetBits(Registry.GetComponentType<Script>());
+      Registry.SetSystemSignature<ScriptSystem>(script_signature);
 
-		var script_signature = new BitArray(ComponentManager.MaxComponents);
-		script_signature.SetBits(Registry.GetComponentType<Script>());
-		Registry.SetSystemSignature<ScriptSystem>(script_signature);
+      var physics_signature = new BitArray(ComponentManager.MaxComponents);
+      physics_signature.SetBits(Registry.GetComponentType<Collider>());
+      physics_signature.SetBits(Registry.GetComponentType<Transform>());
+      physics_signature.SetBits(Registry.GetComponentType<RigidBody>());
+      Registry.SetSystemSignature<PhysicsSystem>(physics_signature);
 
-		var physics_signature = new BitArray(ComponentManager.MaxComponents);
-		physics_signature.SetBits(Registry.GetComponentType<Collider>());
-		physics_signature.SetBits(Registry.GetComponentType<Transform>());
-		physics_signature.SetBits(Registry.GetComponentType<RigidBody>());
-		Registry.SetSystemSignature<PhysicsSystem>(physics_signature);
+      // --- --- --- --- --- --- --- --- --- --- --- ---
 
-		// --- --- --- --- --- --- --- --- --- --- --- ---
+      base.Initialize();
+   }
 
-		base.Initialize();
-	}
+   protected override void LoadContent()
+   {
+      Textures["space-drone"] = Content.Load<Texture2D>("space-drone");
+      Textures["space-bg"] = Content.Load<Texture2D>("space-bg");
+      Textures["space-bullet1"] = Content.Load<Texture2D>("space-bullet1");
+      Textures["explosion"] = Content.Load<Texture2D>("explosion");
+      Sounds["explosion-hit"] = Content.Load<SoundEffect>("explosion-hit");
+      Fonts["fps-font"] = Content.Load<SpriteFont>("fps-font");
 
-	protected override void LoadContent()
-	{
-		Textures["space-drone"] = Content.Load<Texture2D>("space-drone");
-		Textures["space-bg"] = Content.Load<Texture2D>("space-bg");
-		Textures["space-bullet1"] = Content.Load<Texture2D>("space-bullet1");
-		Fonts["fps-font"] = Content.Load<SpriteFont>("fps-font");
+      Factory.CreateSpaceDrone(playerScript: true);
+      Factory.CreateSpaceBackground(new Vector2(0f, 0f));
+      Factory.CreateSpaceBackground(new Vector2(ScreenWidth, 0f));
 
-		_spaceDrone = EntityCreator.CreateSpaceDrone(playerScript: true);
-		ushort _spaceDrone2 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		ushort _spaceDrone3 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		ushort _spaceDrone4 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		ushort _spaceDrone5 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		ushort _spaceDrone6 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		ushort _spaceDrone7 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		ushort _spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
-		_spaceDrone8 = EntityCreator.CreateSpaceDrone(playerScript: false);
+      for (int r = 0; r < 130; r++)
+      {
+         ushort enemyDrone = Factory.CreateSpaceDrone(playerScript: false);
+      }
 
-		_background = EntityCreator.CreateSpaceBackground(new Vector2(0f, 0f));
-		ushort _background2 = EntityCreator.CreateSpaceBackground(new Vector2(ScreenWidth, 0f));
-	}
+      Factory.CreateSpawner();
+   }
 
-	protected override void Update(GameTime gameTime)
-	{
-		_input.Update();
-		if (Input.KeyPressed(Key.Escape))
-		{
-			Exit();
-		}
+   protected override void Update(GameTime gameTime)
+   {
+      _input.Update();
+      if (Input.KeyPressed(Key.Escape))
+      {
+         Exit();
+      }
 
-		float deltaTime = (float)(gameTime.TotalGameTime - _lastUpdate).TotalSeconds * _timeScale;
-		_fps = 1f / (deltaTime / _timeScale);
-		_lastUpdate = gameTime.TotalGameTime;
+      float deltaTime = (float)(gameTime.TotalGameTime.TotalSeconds - _lastUpdate);
+      _fps = 1d / (deltaTime);
 
-		Registry.UpdateRegistry();
+      Registry.UpdateRegistry();
+      _scriptSystem.Update(deltaTime);
+      _movementSystem.Update(deltaTime);
+      _physicsSystem.Update(deltaTime);
 
-		_scriptSystem.Update(deltaTime);
-		_movementSystem.Update(deltaTime);
-		_physicsSystem.Update(deltaTime);
+      base.Update(gameTime);
+   }
 
-		base.Update(gameTime);
-	}
+   protected override void Draw(GameTime gameTime)
+   {
+      GraphicsDevice.Clear(ClearColr);
 
-	protected override void Draw(GameTime gameTime)
-	{
-		GraphicsDevice.Clear(ClearColr);
+      _renderSystem.Render(_spriteBatch);
 
-		_renderSystem.Render(_spriteBatch);
+      Shapes.DrawFillRect(new Vector2(0f, 0f), 230, 140, new Color(30, 30, 30, 200));
+      _spriteBatch.Begin();
+      _spriteBatch.DrawString(Fonts["fps-font"], $"{(int)_fps} FPS", new Vector2(10f, 10f), Color.White);
+      _spriteBatch.DrawString(Fonts["fps-font"], $"# of Entities: {Registry.TotalEntities.ToString()}", new Vector2(10f, 50f), Color.BlueViolet);
+      _spriteBatch.DrawString(Fonts["fps-font"], $"Time: {System.Math.Round(gameTime.TotalGameTime.TotalSeconds, 2).ToString()}", new Vector2(10f, 90f), Color.CadetBlue);
+      _spriteBatch.End();
 
-		_spriteBatch.Begin();
-		_spriteBatch.DrawString(Fonts["fps-font"], $"{(int)_fps} FPS", new Vector2(10f, 10f), Color.White);
-		_spriteBatch.End();
-
-		base.Draw(gameTime);
-	}
+      _lastUpdate += gameTime.ElapsedGameTime.TotalSeconds;
+      base.Draw(gameTime);
+   }
 }

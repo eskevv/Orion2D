@@ -7,10 +7,10 @@ public abstract class Component {
 }
 
 public class Collider : Component {
-   public float X { get; set; }
-   public float Y { get; set; }
-   public float Width { get; set; }
-   public float Height { get; set; }
+	public float X { get; set; }
+	public float Y { get; set; }
+	public float Width { get; set; }
+	public float Height { get; set; }
 }
 
 public class Gravity : Component {
@@ -50,17 +50,19 @@ public class SpriteRenderer : Component {
 	public bool Maximized { get; set; }
 	public Rectangle? SrcRect { get; set; }
 	public ushort ZIndex { get; set; }
+   public bool Additive { get; set; }
 
-	public SpriteRenderer(Texture2D sprite, bool fitScreen = false)
+	public SpriteRenderer(Texture2D sprite)
 	{
 		Sprite = sprite;
 		Color = Color.White;
 		Origin = Vector2.Zero;
 		Scale = Vector2.One;
 		Rotation = 0f;
-		Maximized = fitScreen;
+		Maximized = false;
 		SrcRect = null;
 		ZIndex = 0;
+      Additive = false;
 	}
 }
 
@@ -69,7 +71,7 @@ public abstract class Script : Component {
 
 	public virtual void Update(float deltaTime) { }
 
-   public virtual void OnCollision(Collider c) { }
+	public virtual void OnCollision(Collider c) { }
 
 	protected T GetComponent<T>()
 	{
