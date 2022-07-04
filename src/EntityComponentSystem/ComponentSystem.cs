@@ -2,26 +2,26 @@ using System.Collections.Generic;
 
 namespace Orion2D;
 public class ComponentSystem {
-	// __Fields__
+   // __Fields__
 
-	public HashSet<ushort> Entities { get; set; }
-	public bool IsSetUpdated { get; set; }
+   public HashSet<ushort> Entities { get; set; }
+   public bool IsSetUpdated { get; set; }
 
-	public ComponentSystem()
-	{
-		Entities = new HashSet<ushort>();
-	}
+   public ComponentSystem()
+   {
+      Entities = new HashSet<ushort>();
+   }
 
-	// __Methods__
+   // __Methods__
 
-	protected void RecentUpdates()
-	{
-		if (IsSetUpdated)
-		{
-			PerformSetUpdate();
-			IsSetUpdated = false;
-		}
-	}
+   protected void RecentUpdates()
+   {
+      if (IsSetUpdated)
+      {
+         PerformSetUpdate();
+         IsSetUpdated = false;
+      }
+   }
 
-	protected virtual void PerformSetUpdate() { }
+   protected virtual void PerformSetUpdate() { }
 }
