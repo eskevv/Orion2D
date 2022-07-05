@@ -13,7 +13,7 @@ public class ScriptSystem : ComponentSystem {
       IEnumerable<ushort> entities = Entities;
       foreach (var item in entities.Reverse())
       {
-         var script = CoreGame.Registry.GetComponent<Script>(item);
+         var script = Coordinator.GetComponent<Script>(item);
 
          if (!script.Started())
          {

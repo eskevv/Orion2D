@@ -3,7 +3,6 @@ using System.Diagnostics;
 
 namespace Orion2D;
 public class SystemManager {
-   // __Fields__
 
    Dictionary<string, BitArray> _signatures;
    Dictionary<string, ComponentSystem> _systems;
@@ -14,7 +13,7 @@ public class SystemManager {
       _systems = new Dictionary<string, ComponentSystem>();
    }
 
-   // __Methods__
+   // __Definitions__
 
    public T RegisterSystem<T>() where T : ComponentSystem, new()
    {

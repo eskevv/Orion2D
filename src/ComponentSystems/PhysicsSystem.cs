@@ -14,13 +14,13 @@ public class PhysicsSystem : ComponentSystem {
       {
          ushort firstEntity = entities[x];
 
-         Collider a = CoreGame.Registry.GetComponent<Collider>(firstEntity);
+         Collider a = Coordinator.GetComponent<Collider>(firstEntity);
 
          for (int y = x + 1; y < Entities.Count; y++)
          {
             ushort secondEntity = entities[y];
 
-            Collider b = CoreGame.Registry.GetComponent<Collider>(secondEntity);
+            Collider b = Coordinator.GetComponent<Collider>(secondEntity);
 
             bool collision_happened = CollisionAABB(a, b);
 
@@ -55,12 +55,12 @@ public class PhysicsSystem : ComponentSystem {
 
    private void NotifyScripts(ushort firstEntity, ushort secondEntity, Collider a, Collider b)
    {
-      if (CoreGame.Registry.HasComponentType<Script>(firstEntity))
+      if (Coordinator.HasComponentType<Script>(firstEntity))
       {
          var script = CoreGame.Registry.GetComponent<Script>(firstEntity);
          script.OnCollision(b);
       }
-      if (CoreGame.Registry.HasComponentType<Script>(secondEntity))
+      if (Coordinator.HasComponentType<Script>(secondEntity))
       {
          var script = CoreGame.Registry.GetComponent<Script>(secondEntity);
          script.OnCollision(a);

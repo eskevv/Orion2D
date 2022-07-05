@@ -3,6 +3,8 @@ using System.Collections.Generic;
 namespace Orion2D;
 public class ComponentSystem {
 
+   protected EntityRegistry Coordinator => CoreGame.Registry;
+
    public HashSet<ushort> Entities { get; set; }
 
    public bool IsSetUpdated { get; set; }

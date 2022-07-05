@@ -3,14 +3,14 @@ using System.Diagnostics;
 
 namespace Orion2D;
 public class EntityManager {
-   // __Fields__
 
    public const ushort MaxEntities = 5000;
 
    private Queue<ushort> _availableEntities;
    private BitArray[] _signatures;
-   private ushort _livingEntityCount;
    private string[] _tags;
+
+   public ushort EntityCount { get; private set; }
 
    public EntityManager()
    {
@@ -29,7 +29,7 @@ public class EntityManager {
       _tags = new string[MaxEntities];
    }
 
-   // __Methods__
+   // __Definitions__
 
    public void AssignTag(ushort entity, string tag)
    {
@@ -41,15 +41,11 @@ public class EntityManager {
       return _tags[entity];
    }
 
-   public ushort TotalLiving()
-   {
-      return _livingEntityCount;
-   }
 
    public ushort CreateEntity()
    {
-      Debug.Assert(_livingEntityCount < MaxEntities, "Too many entities in existence.");
-      _livingEntityCount++;
+      Debug.Assert(EntityCount < MaxEntities, "Too many entities in existence.");
+      EntityCount++;
       return _availableEntities.Dequeue();
    }
 
@@ -58,7 +54,7 @@ public class EntityManager {
       Debug.Assert(entity < MaxEntities, "Entity out of range.");
       _signatures[entity].Reset();
       _tags[entity] = "void";
-      _livingEntityCount--;
+      EntityCount--;
       _availableEntities.Enqueue(entity);
    }
 

@@ -8,8 +8,8 @@ public class MovementSystem : ComponentSystem {
 
       foreach (var item in Entities)
       {
-         var transform = CoreGame.Registry.GetComponent<Transform>(item);
-         var rigid_body = CoreGame.Registry.GetComponent<RigidBody>(item);
+         var transform = Coordinator.GetComponent<Transform>(item);
+         var rigid_body = Coordinator.GetComponent<RigidBody>(item);
 
          transform.Position += rigid_body.Velocty * deltaTime * 30f;
       }

@@ -3,7 +3,6 @@ using System.Diagnostics;
 
 namespace Orion2D;
 public class ComponentManager {
-   // __Fields__
 
    public const byte MaxComponents = 10;
 
@@ -17,7 +16,7 @@ public class ComponentManager {
       _components = new Dictionary<string, IComponentArray>();
    }
 
-   // __Methods__
+   // __Definitions__
 
    private ComponentArray<T> GetComponentArray<T>()
    {
@@ -67,7 +66,7 @@ public class ComponentManager {
       if (!_componentTypes.ContainsKey(type_name)) return false;
 
       ComponentArray<T> component_array = GetComponentArray<T>();
-      if (!component_array.HasData(entity)) return false;
+      if (!component_array.IncludesEntity(entity)) return false;
 
       return true;
    }

@@ -26,8 +26,8 @@ public class RenderSystem : ComponentSystem {
    {
       foreach (var item in Entities)
       {
-         var renderer = CoreGame.Registry.GetComponent<SpriteRenderer>(item);
-         var transform = CoreGame.Registry.GetComponent<Transform>(item);
+         var renderer = Coordinator.GetComponent<SpriteRenderer>(item);
+         var transform = Coordinator.GetComponent<Transform>(item);
 
          RedirectBatchMethod(spriteBatch, renderer);
 
@@ -49,8 +49,8 @@ public class RenderSystem : ComponentSystem {
       var z_list = Entities.ToList();
 
       z_list.Sort((x, y) => {
-         var renderer_one = CoreGame.Registry.GetComponent<SpriteRenderer>(x);
-         var renderer_two = CoreGame.Registry.GetComponent<SpriteRenderer>(y);
+         var renderer_one = Coordinator.GetComponent<SpriteRenderer>(x);
+         var renderer_two = Coordinator.GetComponent<SpriteRenderer>(y);
          int baseComparison = renderer_one.ZIndex.CompareTo(renderer_two.ZIndex);
          return baseComparison == 0 ? x.CompareTo(y) : baseComparison;
       });

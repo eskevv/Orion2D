@@ -45,7 +45,7 @@ public class SpaceDroneController : Script {
    {
       Vector2 bullet_origin = _tr.Position + new Vector2(_sp.Sprite.Width / 2, 0f) - new Vector2(8f, 0f);
       Vector2 bullet_dir = Vector2.Normalize(Input.MousePosition - bullet_origin);
-      ushort bullet = Factory.CreateSpaceBullet(bullet_origin, bullet_dir);
+      EntityHandle bullet = Factory.CreateSpaceBullet(bullet_origin, bullet_dir);
    }
 
    private bool IsAbleToShoot()

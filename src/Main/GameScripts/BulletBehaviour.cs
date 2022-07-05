@@ -41,7 +41,7 @@ public class BulletBehaviour : Script {
 
    public override void OnCollision(Collider c)
    {
-      string tag = CoreGame.Registry.RetrieveTag(c.Entity);
+      string tag = CoreGame.Registry.GetTag(c.Entity);
       if (c.Entity != 0 && tag != Tags.Projectile)
       {
          int rC = _r.Next(255);
@@ -49,7 +49,7 @@ public class BulletBehaviour : Script {
          int bC = _r.Next(200);
          var colr = new Color(rC, gC, bC, 255);
 
-         for (int t = 0; t < _r.Next(16) + 2; t++)
+         for (int t = 0; t < _r.Next(14) + 5; t++)
          {
             Factory.CreateExplosion(_tr.Position, colr);
          }

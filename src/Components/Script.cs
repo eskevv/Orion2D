@@ -1,5 +1,3 @@
-using Microsoft.Xna.Framework;
-
 namespace Orion2D;
 public abstract class Script : Component {
 

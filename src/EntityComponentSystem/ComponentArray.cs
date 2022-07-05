@@ -4,7 +4,6 @@ using System.Linq;
 
 namespace Orion2D;
 public class ComponentArray<T> : IComponentArray {
-   // __Fields__
 
    private T[] _componentArray;
    private ushort _size;
@@ -18,7 +17,9 @@ public class ComponentArray<T> : IComponentArray {
       _entityIndexes = new Dictionary<ushort, ushort>();
    }
 
-   // __Methods__
+   // __Definitions__
+
+   public bool IncludesEntity(ushort entity) => _dataIndexes.ContainsKey(entity);
 
    public bool DestroyIndexedData(ushort entity)
    {
@@ -59,11 +60,6 @@ public class ComponentArray<T> : IComponentArray {
       Debug.Assert(_dataIndexes.ContainsKey(entity), "Retrieving non-existent component.");
       ushort data_index = _dataIndexes[entity];
       return _componentArray[data_index];
-   }
-
-   public bool HasData(ushort entity)
-   {
-      return _dataIndexes.ContainsKey(entity);
    }
 
    public ushort GetEntity(T component) // likely unused / obsolete utility

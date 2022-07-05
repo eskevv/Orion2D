@@ -131,7 +131,7 @@ public class CoreGame : Game {
 
       for (int r = 0; r < 130; r++)
       {
-         ushort enemyDrone = Factory.CreateSpaceDrone(playerScript: false, "enemy-space-02", true);
+         EntityHandle enemyDrone = Factory.CreateSpaceDrone(playerScript: false, "enemy-space-02", true);
       }
 
       Factory.CreateSpawner();
@@ -164,16 +164,15 @@ public class CoreGame : Game {
 
       _renderSystem.Render(_spriteBatch);
       
-      Shapes.DrawFillRect(new Vector2(0f, 0f), 230, 140, new Color(30, 30, 30, 255));
-
       _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
       _spriteBatch.DrawString(Fonts["fps-font"], $"{(int)_fps} FPS", new Vector2(10f, 10f), Color.White);
       _spriteBatch.DrawString(Fonts["fps-font"], $"# of Entities: {Registry.TotalEntities.ToString()}", new Vector2(10f, 50f), Color.BlueViolet);
       _spriteBatch.DrawString(Fonts["fps-font"], $"Time: {System.Math.Round(gameTime.TotalGameTime.TotalSeconds, 2).ToString()}", new Vector2(10f, 90f), Color.CadetBlue);
+      Shapes.DrawFillRect(new Vector2(0, 0), 230, 140, new Color(30, 30, 30, 200));
       _spriteBatch.End();
 
-      _lastUpdate += gameTime.ElapsedGameTime.TotalSeconds;
-
       base.Draw(gameTime);
+
+      _lastUpdate += gameTime.ElapsedGameTime.TotalSeconds;
    }
 }

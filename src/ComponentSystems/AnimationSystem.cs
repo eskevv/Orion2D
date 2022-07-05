@@ -5,8 +5,8 @@ public class AnimationSystem : ComponentSystem {
    {
       foreach (var entity in Entities)
       {
-         Animator animator = CoreGame.Registry.GetComponent<Animator>(entity);
-         SpriteRenderer renderer = CoreGame.Registry.GetComponent<SpriteRenderer>(entity);
+         Animator animator = Coordinator.GetComponent<Animator>(entity);
+         SpriteRenderer renderer = Coordinator.GetComponent<SpriteRenderer>(entity);
 
          AnimationClip clip = animator.CurrentClip;
 
