@@ -3,7 +3,8 @@ using System.Linq;
 
 namespace Orion2D;
 public class ScriptSystem : ComponentSystem {
-   // __Methods__
+   
+   // __Definitions__
 
    public void Update(float deltaTime)
    {
@@ -13,6 +14,11 @@ public class ScriptSystem : ComponentSystem {
       foreach (var item in entities.Reverse())
       {
          var script = CoreGame.Registry.GetComponent<Script>(item);
+
+         if (!script.Started())
+         {
+            script.Start();
+         }
 
          script.Update(deltaTime);
       }

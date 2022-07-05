@@ -1,21 +1,23 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace Orion2D;
 public static class Factory {
-   // __Fields__
 
    private static Random _randomizer = new Random();
 
    private static EntityRegistry _registry => CoreGame.Registry;
 
-   public static ushort CreateSpaceDrone(bool playerScript)
+   // __Definitions__
+
+   public static ushort CreateSpaceDrone(bool playerScript, string image, bool animated = false)
    {
       ushort space_drone = _registry.CreateEntity();
 
       var r = new Random();
       var position = new Vector2(r.Next(1500), r.Next(800));
-      var spriteRenderer = new SpriteRenderer(CoreGame.Textures["space-drone"]);
+      var spriteRenderer = new SpriteRenderer(CoreGame.Textures[image]);
       spriteRenderer.ZIndex = 2;
       Collider a = new Collider {
          X = position.X,
@@ -23,6 +25,15 @@ public static class Factory {
          Width = spriteRenderer.Sprite.Width,
          Height = spriteRenderer.Sprite.Height,
       };
+
+      if (animated)
+      {
+         Texture2D[] enemyTwoAnimation = new[] { CoreGame.Textures["enemy-space-02"], CoreGame.Textures["enemy-space-03"], CoreGame.Textures["enemy-space-04"] };
+         var animationOne = new AnimationClip(enemyTwoAnimation, 0.8f);
+         var animator = new Animator();
+         animator.AddAnimation(animationOne, "Parol");
+         _registry.AddComponent<Animator>(space_drone, animator);
+      }
 
       _registry.AddComponent<Transform>(space_drone, new Transform(position));
       _registry.AddComponent<SpriteRenderer>(space_drone, spriteRenderer);
@@ -53,35 +64,6 @@ public static class Factory {
       _registry.GetComponent<Script>(background).Awake();
 
       return background;
-   }
-
-   public static ushort CreateSpaceBullet(Vector2 position, Vector2 direction)
-   {
-      ushort bullet = _registry.CreateEntity();
-
-      var spriteRenderer = new SpriteRenderer(CoreGame.Textures["space-bullet1"]);
-      spriteRenderer.ZIndex = 3;
-
-      Collider a = new Collider {
-         X = position.X,
-         Y = position.Y,
-         Width = spriteRenderer.Sprite.Width,
-         Height = spriteRenderer.Sprite.Height,
-      };
-
-      RigidBody rb = new RigidBody();
-      rb.Velocty = direction;
-
-      _registry.AddComponent<RigidBody>(bullet, rb);
-      _registry.AddComponent<Collider>(bullet, a);
-      _registry.AddComponent<Transform>(bullet, new Transform(position));
-      _registry.AddComponent<SpriteRenderer>(bullet, spriteRenderer);
-      _registry.AddComponent<Script>(bullet, new BulletBehaviour());
-
-      _registry.AssignTag(bullet, "projectile");
-
-      _registry.GetComponent<Script>(bullet).Awake();
-      return bullet;
    }
 
    public static ushort CreateSpawner()
@@ -116,5 +98,32 @@ public static class Factory {
       _registry.GetComponent<Script>(explosion).Awake();
       return explosion;
    }
-}
 
+   public static ushort CreateSpaceBullet(Vector2 position, Vector2 direction)
+   {
+      ushort bullet = _registry.CreateEntity();
+
+      SpriteRenderer sp = new SpriteRenderer(CoreGame.Textures["space-bullet1"]) {
+         ZIndex = 3,
+      };
+      Collider co = new Collider {
+         X = position.X,
+         Y = position.Y,
+         Width = sp.Sprite.Width,
+         Height = sp.Sprite.Height,
+      };
+      RigidBody rb = new RigidBody() {
+         Velocty = direction,
+      };
+
+      _registry.AddComponent<RigidBody>(bullet, rb);
+      _registry.AddComponent<Collider>(bullet, co);
+      _registry.AddComponent<Transform>(bullet, new Transform(position));
+      _registry.AddComponent<SpriteRenderer>(bullet, sp);
+      _registry.AddComponent<Script>(bullet, new BulletBehaviour());
+      _registry.AssignTag(bullet, Tags.Projectile);
+      _registry.GetComponent<Script>(bullet).Awake();
+
+      return bullet;
+   }
+}

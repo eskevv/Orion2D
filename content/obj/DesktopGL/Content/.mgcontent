@@ -4,6 +4,9 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
+    <File>D:/Developer/projects/Orion2D/content/enemy-space-02.png</File>
+    <File>D:/Developer/projects/Orion2D/content/enemy-space-03.png</File>
+    <File>D:/Developer/projects/Orion2D/content/enemy-space-04.png</File>
     <File>D:/Developer/projects/Orion2D/content/explosion.png</File>
     <File>D:/Developer/projects/Orion2D/content/explosion-hit.wav</File>
     <File>D:/Developer/projects/Orion2D/content/fps-font.spritefont</File>
@@ -12,6 +15,9 @@
     <File>D:/Developer/projects/Orion2D/content/space-drone.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

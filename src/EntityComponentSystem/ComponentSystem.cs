@@ -2,9 +2,9 @@ using System.Collections.Generic;
 
 namespace Orion2D;
 public class ComponentSystem {
-   // __Fields__
 
    public HashSet<ushort> Entities { get; set; }
+
    public bool IsSetUpdated { get; set; }
 
    public ComponentSystem()
@@ -12,7 +12,7 @@ public class ComponentSystem {
       Entities = new HashSet<ushort>();
    }
 
-   // __Methods__
+   // __Definitions__
 
    protected void RecentUpdates()
    {

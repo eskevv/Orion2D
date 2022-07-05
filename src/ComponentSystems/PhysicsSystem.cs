@@ -1,55 +1,38 @@
-using System;
 using System.Linq;
 
 namespace Orion2D;
 public class PhysicsSystem : ComponentSystem {
-   // __Methods__
 
-   public static event Action<ushort, ushort> CollidingObjects;
+   // __Definitions
 
    public void Update(float deltaTime)
    {
-      RecentUpdates();
-      foreach (var item in Entities)
-      {
-         var transform = CoreGame.Registry.GetComponent<Transform>(item);
-         var collider = CoreGame.Registry.GetComponent<Collider>(item);
-         collider.X = transform.Position.X;
-         collider.Y = transform.Position.Y;
-      }
+      UpdateColliders();
 
       var entities = Entities.ToList();
       for (int x = 0; x < Entities.Count; x++)
       {
-         ushort item = entities[x];
-         var collider = CoreGame.Registry.GetComponent<Collider>(item);
+         ushort firstEntity = entities[x];
 
-         for (int y = x; y < Entities.Count; y++)
+         Collider a = CoreGame.Registry.GetComponent<Collider>(firstEntity);
+
+         for (int y = x + 1; y < Entities.Count; y++)
          {
-            if (x == y) continue;
-            ushort item2 = entities[y];
-            var collider2 = CoreGame.Registry.GetComponent<Collider>(item2);
-            bool collision_happened = TestCollision(collider, collider2);
+            ushort secondEntity = entities[y];
+
+            Collider b = CoreGame.Registry.GetComponent<Collider>(secondEntity);
+
+            bool collision_happened = CollisionAABB(a, b);
 
             if (collision_happened)
             {
-               if (CoreGame.Registry.HasComponentType<Script>(item))
-               {
-                  var script = CoreGame.Registry.GetComponent<Script>(item);
-                  script.OnCollision(collider2);
-               }
-               if (CoreGame.Registry.HasComponentType<Script>(item2))
-               {
-                  var script = CoreGame.Registry.GetComponent<Script>(item2);
-                  script.OnCollision(collider);
-               }
-               // CollidingObjects?.Invoke(item, item2);
+               NotifyScripts(firstEntity, secondEntity, a, b);
             }
          }
       }
    }
 
-   public bool TestCollision(Collider a, Collider b)
+   public bool CollisionAABB(Collider a, Collider b)
    {
       bool collide_left = a.X <= b.X + b.Width;
       bool collide_right = a.X + a.Width >= b.X;
@@ -57,5 +40,30 @@ public class PhysicsSystem : ComponentSystem {
       bool collide_bottom = a.Y + a.Height >= b.Y;
 
       return collide_left && collide_right && collide_top && collide_bottom;
+   }
+
+   private void UpdateColliders()
+   {
+      foreach (var item in Entities)
+      {
+         Transform transform = CoreGame.Registry.GetComponent<Transform>(item);
+         Collider collider = CoreGame.Registry.GetComponent<Collider>(item);
+         collider.X = transform.Position.X;
+         collider.Y = transform.Position.Y;
+      }
+   }
+
+   private void NotifyScripts(ushort firstEntity, ushort secondEntity, Collider a, Collider b)
+   {
+      if (CoreGame.Registry.HasComponentType<Script>(firstEntity))
+      {
+         var script = CoreGame.Registry.GetComponent<Script>(firstEntity);
+         script.OnCollision(b);
+      }
+      if (CoreGame.Registry.HasComponentType<Script>(secondEntity))
+      {
+         var script = CoreGame.Registry.GetComponent<Script>(secondEntity);
+         script.OnCollision(a);
+      }
    }
 }

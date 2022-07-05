@@ -2,7 +2,8 @@ using Microsoft.Xna.Framework;
 
 namespace Orion2D;
 public class Force {
-   //--Methods
+
+   // __Definitions__
 
    public static Vector2 GenerateDragForce(Body p, float k)
    {

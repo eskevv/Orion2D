@@ -1,9 +1,7 @@
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Orion2D;
 public class BitArray {
-   // __Fields__
 
    private bool[] _set;
 
@@ -12,7 +10,7 @@ public class BitArray {
       _set = new bool[size];
    }
 
-   // __Methods__
+   // __Definitions__
 
    public void SetBits(params ushort[] bitNumbers)
    {

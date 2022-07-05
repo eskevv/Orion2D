@@ -3,7 +3,7 @@
   <SourceFile>D:/Developer/projects/Orion2D/content/explosion-hit.wav</SourceFile>
   <SourceTime>2022-07-03T19:40:39.631229-04:00</SourceTime>
   <DestFile>D:/Developer/projects/Orion2D/content/bin/DesktopGL/Content/explosion-hit.xnb</DestFile>
-  <DestTime>2022-07-03T19:44:32.7861975-04:00</DestTime>
+  <DestTime>2022-07-04T15:22:32.8318224-04:00</DestTime>
   <Importer>WavImporter</Importer>
   <ImporterTime>2020-08-10T12:17:54-04:00</ImporterTime>
   <Processor>SoundEffectProcessor</Processor>

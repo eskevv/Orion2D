@@ -5,7 +5,7 @@ using System.Linq;
 namespace Orion2D;
 public class RenderSystem : ComponentSystem {
 
-   enum BlendMode { Alpha, Additive };
+   private enum BlendMode { Alpha, Additive };
 
    private BlendMode _currentBlend = BlendMode.Alpha;
 
@@ -64,13 +64,13 @@ public class RenderSystem : ComponentSystem {
       {
          spriteBatch.End();
          _currentBlend = BlendMode.Additive;
-         spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive);
+         spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
       }
       else if (!renderer.Additive && _currentBlend == BlendMode.Additive)
       {
          spriteBatch.End();
          _currentBlend = BlendMode.Alpha;
-         spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+         spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
       }
    }
 }

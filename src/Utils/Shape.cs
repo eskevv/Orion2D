@@ -9,13 +9,11 @@ public enum ShapeType {
 }
 
 public class Shape {
-   // __Fields__
 
    public ShapeType Type { get; set; }
 }
 
 public class CircleShape : Shape {
-   // __Fields__
 
    public float Radius { get; set; }
 
@@ -27,7 +25,6 @@ public class CircleShape : Shape {
 }
 
 public class PolygonShape : Shape {
-   // __Fields__
 
    private List<Vector2> _vertices;
 
@@ -39,7 +36,6 @@ public class PolygonShape : Shape {
 }
 
 public class BoxShape : Shape {
-   // __Fields__
 
    private List<Vector2> _vertices;
    public int Width { get; set; }

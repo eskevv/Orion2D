@@ -2,7 +2,6 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-
 namespace Orion2D;
 public class Shapes {
    //  __Fields__
@@ -19,19 +18,18 @@ public class Shapes {
       _effect.Projection = Matrix.CreateOrthographicOffCenter(0f, _device.Viewport.Width, _device.Viewport.Height, 0f, -1, 1);
       _effect.World = Matrix.CreateTranslation(0.5f, -0.5f, 0f);
       _effect.View = Matrix.Identity;
+      _effect.GraphicsDevice.BlendState = BlendState.AlphaBlend;
    }
 
    // __Configurations__
 
    private static void DrawPrimitives(PrimitiveType type, VertexPositionColor[] vertices, short[] indeces, int primitiveCount)
    {
-
       foreach (var effectPass in _effect.CurrentTechnique.Passes)
       {
          effectPass.Apply();
          _device.DrawUserIndexedPrimitives(type, vertices, 0, vertices.Length, indeces, 0, primitiveCount);
       }
-
    }
 
    private static short[] GetContinuousIndeces(int vertexCount)

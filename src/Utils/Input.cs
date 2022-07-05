@@ -3,12 +3,16 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Orion2D;
 public class Input {
-   // __Fields__
 
    private static KeyboardState _currentKeyboard;
    private static KeyboardState _prevKeyboard;
    private static MouseState _currentMouse;
    private static MouseState _previousMouse;
+
+   private static Key _positiveRightKey = Key.D;
+   private static Key _negativeRightKey = Key.A;
+   private static Key _positiveUpKey = Key.S;
+   private static Key _negativeUpKey = Key.W;
 
    public static Vector2 MousePosition => new Vector2(_currentMouse.X, _currentMouse.Y);
    public static float RawHorizontal => GetRawHorizontal();
@@ -70,11 +74,11 @@ public class Input {
    private static float GetRawHorizontal()
    {
       float rawInput = 0;
-      if (KeyHeld(Key.A))
+      if (KeyHeld(_negativeRightKey))
       {
          rawInput -= 1;
       }
-      if (KeyHeld(Key.D))
+      if (KeyHeld(_positiveRightKey))
       {
          rawInput += 1;
       }
@@ -85,13 +89,13 @@ public class Input {
    private static float GetRawVertical()
    {
       float rawInput = 0;
-      if (KeyHeld(Key.S))
-      {
-         rawInput += 1;
-      }
-      if (KeyHeld(Key.W))
+      if (KeyHeld(_negativeUpKey))
       {
          rawInput -= 1;
+      }
+      if (KeyHeld(_positiveUpKey))
+      {
+         rawInput += 1;
       }
 
       return rawInput;
